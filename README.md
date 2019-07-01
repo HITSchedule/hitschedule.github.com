@@ -1,1 +1,1 @@
-Web page for HITSchedule.
+Website for HITSchedule.
