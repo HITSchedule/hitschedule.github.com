@@ -73,7 +73,8 @@
                 <div class="col-sm-7">
                     <div class="header-content">
                         <div class="header-content-inner">
-                            <h1>本软件仅供哈工大本科生进行课表相关操作使用，完全免费，严禁用于商业用途!</h1>
+                            <h2>本软件仅供哈工大本科生进行课表相关操作使用，完全免费，严禁用于商业用途!</h2>
+                            <h4>软件可能存在解析错误，请刷新后核对课表是否存在错误，以免错过上课时间!</h4>
                             <a href="#download" class="btn btn-outline btn-xl page-scroll">开始使用!</a>
                         </div>
                     </div>
@@ -104,8 +105,8 @@
                     <h2 class="section-heading">点击下方按钮下载</h2>
                     <p>本软件目前仅支持Android平台!</p>
                     <div class="badges">
-                        <a class="badge-link" href="https://github.com/HITSchedule/HITSchedule/releases/download/1.2.7/schedule-v1-2-7.apk"><img src="img/download.svg" alt=""></a>
-			<a class="badge-link" href="http://hfiles.wyxiang.cn/schedule-v1-2-7.apk"><img src="img/back.svg" alt=""></a>
+                        <a class="badge-link" href="https://github.com/HITSchedule/HITSchedule/releases/download/1.2.7/schedule-v1-2-7.apk" onclick="javascript:add()"><img src="img/download.svg" alt=""></a>
+			<a class="badge-link" href="http://hfiles.wyxiang.cn/schedule-v1-2-7.apk" onclick="javascript:add()"><img src="img/back.svg" alt=""></a>
                         <!-- <a class="badge-link" href="#"><img src="img/app-store-badge.svg" alt=""></a> -->
                     </div>
                 </div>
@@ -194,6 +195,7 @@
     </section> -->
 
     <section id="contact" class="contact bg-primary">
+        <h3>联系我们：<a href="mailto:yuxiang.wei.cs@gmail.com?subject=意见反馈&body=" style="color: #FFFFFF">yuxiang.wei.cs@gmail.com</a></h3>
     </section>
 
     <footer>
@@ -224,6 +226,57 @@
 
     <!-- Theme JavaScript -->
     <script src="js/new-age.min.js"></script>
+
+    // 这段代码依赖 jquery，请检查下是否有引用
+    // 具体的HTML节点约定你可以根据你的需要更改
+    <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+    <script type="text/javascript">
+        var add = function addCount(Counter) {
+          AV.initialize("JrPdy8N1wRHrRMzRajLPP5hj-gzGzoHsz", "MLI3brbtEk70BfFUUDKSbfMk"); 
+          var Counter = AV.Object.extend("Counter");
+          url = "HITSchedule"; 
+          var query = new AV.Query(Counter);
+          query.equalTo("url", url); // 我的需求以存储的url为唯一索引
+          // Case 有这条数据则time字段+1
+          query.find({
+            success: function(results) {
+              if (results.length > 0) {
+                var counter = results[0];
+                counter.fetchWhenSave(true);
+                counter.increment("time");
+                counter.save(null, {
+                  success: function(counter) {
+                  },
+                  error: function(counter, e) {
+                    console.warn(counter, e)
+                  }
+                });
+              } 
+              // Case 没有这条数据则新增一行数据
+              else { 
+                var newcounter = new Counter();
+                var acl = new AV.ACL();
+                acl.setPublicReadAccess(true);
+              // acl.setWriteAccess(AV.User.current(),true);
+                acl.setWriteAccess('*', true);
+                newcounter.setACL(acl)
+                newcounter.set("url", url); // 我的需求以存储的url为唯一索引
+                newcounter.set("time", 1);
+                newcounter.save(null, {
+                  success: function(newcounter) {
+                  },
+                  error: function(newcounter, error) {
+                    console.log('Failed to create');
+                  }
+                });
+              }
+            },
+            error: function(e) {
+              console.warn(e)
+            }
+          });
+        };
+    </script>
 
 </body>
 
