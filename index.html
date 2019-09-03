@@ -107,6 +107,7 @@
                     <div class="badges">
                         <a class="badge-link" href="https://github.com/HITSchedule/HITSchedule/releases/download/1.2.7/schedule-v1-2-7.apk" onclick="javascript:add()"><img src="img/download.svg" alt=""></a>
 			<a class="badge-link" href="http://hfiles.wyxiang.cn/schedule-v1-2-7.apk" onclick="javascript:add()"><img src="img/back.svg" alt=""></a>
+      <p id="count"></p>
                         <!-- <a class="badge-link" href="#"><img src="img/app-store-badge.svg" alt=""></a> -->
                     </div>
                 </div>
@@ -230,6 +231,28 @@
     // 这段代码依赖 jquery，请检查下是否有引用
     // 具体的HTML节点约定你可以根据你的需要更改
     <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+    <script>
+      window.onload = function showTime() {
+        AV.initialize("JrPdy8N1wRHrRMzRajLPP5hj-gzGzoHsz", "MLI3brbtEk70BfFUUDKSbfMk"); 
+            var Counter = AV.Object.extend("Counter");
+            url = "HITSchedule"; 
+            var query = new AV.Query(Counter);
+            query.equalTo("url", url); // 我的需求以存储的url为唯一索引
+            // Case 有这条数据则time字段+1
+            query.find({
+              success: function(results) {
+                if (results.length > 0) {
+                  var counter = results[0];
+                  counter.fetchWhenSave(true);
+                  document.getElementById("count").innerHTML = "下载次数 " + counter.get("time");
+                }
+              },
+              error: function(e) {
+                console.warn(e)
+              }
+            });
+      };
+    </script>
     <script type="text/javascript">
         var add = function addCount(Counter) {
           AV.initialize("JrPdy8N1wRHrRMzRajLPP5hj-gzGzoHsz", "MLI3brbtEk70BfFUUDKSbfMk"); 
@@ -277,7 +300,6 @@
           });
         };
     </script>
-
 </body>
 
 </html>
